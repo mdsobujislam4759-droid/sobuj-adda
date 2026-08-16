@@ -1,0 +1,72 @@
+               document.getElementById('homeTab').classList.add('active');
+                document.getElementById('headerTitle').innerText = "সবুজ আড্ডা";
+            } else if(tabName === 'chat') {
+                document.getElementById('chatTab').classList.add('active');
+                document.getElementById('headerTitle').innerText = "চ্যাট রুম";
+            } else if(tabName === 'profile') {
+                document.getElementById('profileTab').classList.add('active');
+                document.getElementById('headerTitle').innerText = "প্রোফাইল";
+            }
+        }
+
+        function previewMedia(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedMediaUrl = URL.createObjectURL(file);
+                const preview = document.getElementById('mediaPreview');
+                preview.src = selectedMediaUrl;
+                preview.style.display = 'block';
+            }
+        }
+
+        function createPost() {
+            const text = document.getElementById('postText').value.trim();
+            if (!text && !selectedMediaUrl) {
+                alert("দয়া করে কিছু লিখুন অথবা ছবি/ভিডিও সিলেক্ট করুন!");
+                return;
+            }
+
+            const feed = document.getElementById('feedContainer');
+            let mediaHtml = selectedMediaUrl ? `<img src="${selectedMediaUrl}" class="post-media" style="display:block;">` : '';
+
+            const newPostHTML = `
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="avatar">আ</div>
+                    <div class="post-user-info">
+                        <h4>আপনি</h4>
+                        <span>এইমাত্র</span>
+                    </div>
+                </div>
+                <div class="post-content">${text}</div>
+                ${mediaHtml}
+            </div>`;
+
+            feed.insertAdjacentHTML('afterbegin', newPostHTML);
+            document.getElementById('postText').value = '';
+            document.getElementById('mediaPreview').style.display = 'none';
+            selectedMediaUrl = "";
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatMessageInput');
+            const msgText = input.value.trim();
+            if(!msgText) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML += `<div class="message outgoing">${msgText}</div>`;
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                chatMessages.innerHTML += `<div class="message incoming">আপনার মেসেজটি সফলভাবে পৌঁছেছে! আড্ডা জমজমাট হচ্ছে।</div>`;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        }
+
+        function checkEnter(e) {
+            if(e.key === 'Enter') sendChatMessage();
+        }
+
+        function startVideoCall() {
+            alert("ভি
